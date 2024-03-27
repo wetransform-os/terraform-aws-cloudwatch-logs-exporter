@@ -13,7 +13,7 @@ variable "s3_bucket" {
 
 variable "exporter_version" {
   description = "Version of the cloudwatch-exporter to deploy. Defaults to the latest version available"
-  default     = "0.0.2"
+  default     = "0.1.0"
 }
 
 variable "s3_prefix" {

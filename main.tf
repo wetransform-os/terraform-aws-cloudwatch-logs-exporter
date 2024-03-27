@@ -4,7 +4,7 @@ resource "null_resource" "download_lambda_zip" {
   }
 
   provisioner "local-exec" {
-    command = "curl -L -o ${path.module}/lambda-cloudwatch-export_${var.exporter_version}_linux_amd64.zip https://github.com/gadgetry-io/lambda-cloudwatch-export/releases/download/v${var.exporter_version}/lambda-cloudwatch-export_${var.exporter_version}_linux_amd64.zip"
+    command = "curl -L -o ${path.module}/lambda-cloudwatch-export_${var.exporter_version}_linux_amd64.zip https://github.com/wetransform-os/lambda-cloudwatch-export/releases/download/v${var.exporter_version}/lambda-cloudwatch-export_${var.exporter_version}_linux_amd64.zip"
   }
 }
 
@@ -12,8 +12,11 @@ resource "aws_lambda_function" "cloudwatch_export" {
   function_name = var.name
   filename      = "${path.module}/lambda-cloudwatch-export_${var.exporter_version}_linux_amd64.zip"
   role          = aws_iam_role.cloudwatch_export.arn
-  handler       = "cloudwatch-export"
-  runtime       = "go1.x"
+  handler       = "bootstrap"
+
+  # go1.x is no longer supported
+  # see https://aws.amazon.com/de/blogs/compute/migrating-aws-lambda-functions-from-the-go1-x-runtime-to-the-custom-runtime-on-amazon-linux-2/
+  runtime       = "provided.al2023"
 
   environment {
     variables = {
